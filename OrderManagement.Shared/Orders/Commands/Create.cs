@@ -1,6 +1,8 @@
-﻿namespace OrderManagement.Shared.Orders.Commands;
+﻿using MediatR;
 
-public record CreateOrderCommand
+namespace OrderManagement.Shared.Orders.Commands;
+
+public record CreateOrderCommand : IRequest<OrderDto>
 {
     public string CustomerName { get; init; } = string.Empty;
     public List<CreateOrderItemCommand> Items { get; init; } = [];

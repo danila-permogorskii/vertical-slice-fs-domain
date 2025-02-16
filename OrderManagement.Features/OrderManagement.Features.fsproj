@@ -6,7 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Library.fs" />
+    <Compile Include="Orders\Domain.fs" />
+    <Compile Include="Orders\Storage.fs" />
+    <Compile Include="Orders\Commands\CreateOrder.fs" />
+    <Compile Include="Orders\Queries\GetOrder.fs" />
   </ItemGroup>
 
   <ItemGroup>

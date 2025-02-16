@@ -1,6 +1,6 @@
 ﻿namespace OrderManagement.Shared.Orders;
 
-public record OrderDto()
+public record OrderDto
 {
     public Guid Id { get; init; }
     public string CustomerName { get; init; } = string.Empty;
@@ -14,5 +14,5 @@ public record OrderItemDto
 {
     public string ProductName { get; init; } = string.Empty;
     public int Quantity { get; init; }
-    public decimal Features { get; init; }
+    public decimal UnitPrice { get; init; }
 }
