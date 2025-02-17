@@ -1,27 +1,42 @@
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using OrderManagement.Features.Orders;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace OrderManagement.Api;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddMediatR(cfg =>
+public class Program
 {
-    cfg.RegisterServicesFromAssembly(typeof(Order).Assembly);
-});
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        ConfigureServices(builder.Services, builder.Configuration);
+        
+        var app = builder.Build();
+        ConfigureMiddleware(app);
+        
+        app.Run();
+    }
 
-var app = builder.Build();
+    public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddControllers();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(Order).Assembly);
+        });
+    }
+
+    public static void ConfigureMiddleware(WebApplication app)
+    {
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseAuthorization();
+        app.MapControllers();
+    }
 }
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();

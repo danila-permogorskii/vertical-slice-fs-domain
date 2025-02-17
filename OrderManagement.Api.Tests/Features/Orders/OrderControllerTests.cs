@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 using OrderManagement.Api.Features.Orders.Models;
@@ -8,11 +9,25 @@ using OrderManagement.Shared.Orders;
 
 namespace OrderManagement.Api.Tests.Features.Orders;
 
-public class OrderControllerTests(WebApplicationFactory<Program> factory)
-    : IClassFixture<WebApplicationFactory<Program>>
+public class OrderControllerTests
+    : IClassFixture<WebApplicationFactory<Program>>, IDisposable
 {
-    private readonly WebApplicationFactory<Program> _factory = factory;
-    private readonly HttpClient _client = factory.CreateClient();
+    private readonly HttpClient _client;
+
+    public OrderControllerTests(WebApplicationFactory<Program> factory)
+    {
+        _client = factory
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseContentRoot(Directory.GetCurrentDirectory());
+            })
+            .CreateClient();
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
+    }
 
     [Fact]
     public async Task CreateOrder_WithValidRequest_ReturnsCreateOrder()
